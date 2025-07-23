@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Register</h1>
+<form method="post">
+    {% csrf_token %}
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" id="id_first_name" required><br>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" id="id_last_name" required><br>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" id="id_email" required><br>
+    {{ form.as_p }}
+    <button type="submit">Register</button>
+</form>
+{% endblock %}
