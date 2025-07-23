@@ -1,15 +1,57 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+
 {% block content %}
-<h1>Register</h1>
-<form method="post">
+
+  {% if form.errors %}
+    <div class="form-errors">
+      <h3>⚠️ Registration Failed</h3>
+      <p>Please correct the following:</p>
+      {% for field in form %}
+        {% for error in field.errors %}
+          <p><strong>{{ field.label }}:</strong> {{ error }}</p>
+        {% endfor %}
+      {% endfor %}
+      {% for error in form.non_field_errors %}
+        <p><strong>Error:</strong> {{ error }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <h2>Register</h2>
+  <form method="POST">
     {% csrf_token %}
-    <label for="id_first_name">First name:</label>
-    <input type="text" name="first_name" id="id_first_name" required><br>
-    <label for="id_last_name">Last name:</label>
-    <input type="text" name="last_name" id="id_last_name" required><br>
-    <label for="id_email">Email:</label>
-    <input type="email" name="email" id="id_email" required><br>
     {{ form.as_p }}
     <button type="submit">Register</button>
-</form>
+  </form>
+
+  <div id="errorModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h3>⚠️ Registration Failed</h3>
+      {% for field in form %}
+        {% for error in field.errors %}
+          <p><strong>{{ field.label }}:</strong> {{ error }}</p>
+        {% endfor %}
+      {% endfor %}
+      {% for error in form.non_field_errors %}
+        <p>{{ error }}</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  {% if form.errors %}
+    <script>
+      document.getElementById("errorModal").style.display = "block";
+      document.querySelector(".close").onclick = function() {
+        document.getElementById("errorModal").style.display = "none";
+      };
+      window.onclick = function(event) {
+        const modal = document.getElementById("errorModal");
+        if (event.target === modal) {
+          modal.style.display = "none";
+        }
+      };
+    </script>
+  {% endif %}
+
 {% endblock %}

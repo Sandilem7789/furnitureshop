@@ -2,6 +2,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import logout
+from django.contrib.auth import login
+
+
+# import your new form
+from .forms import CustomUserCreationForm
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -46,17 +51,21 @@ def register(request):
     On success, saves the user and redirects to login page.
     """
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            user.first_name = request.POST.get('first_name', '')
-            user.last_name = request.POST.get('last_name', '')
-            user.email = request.POST.get('email', '')
+            user = form.save(commit=False)  # Don't save yet
+            user.first_name = form.cleaned_data['first_name']
+            user.last_name = form.cleaned_data['last_name']
+            user.email = form.cleaned_data['email']
             user.save()
+            
+            login(request, user) # Automatically log in the user after registration
             messages.success(request, 'Registration successful. You can now log in.')
-            return redirect('login')
+            return redirect('product_list')
+        else:
+            messages.error(request, 'Registration failed. Please correct the errors below.')
     else:
-        form = UserCreationForm()
+        form = CustomUserCreationForm()
     return render(request, 'store/register.html', {'form': form})
 
 @login_required
