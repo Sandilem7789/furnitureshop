@@ -60,7 +60,7 @@ def register(request):
             user.save()
             
             login(request, user) # Automatically log in the user after registration
-            messages.success(request, 'Registration successful. You can now log in.')
+            messages.success(request, 'Registration successful. You care now loggen in.')
             return redirect('product_list')
         else:
             messages.error(request, 'Registration failed. Please correct the errors below.')

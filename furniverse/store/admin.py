@@ -1,9 +1,17 @@
 from django.contrib import admin
 from .models import Category, Product, ProductImage, Order, OrderItem
 
+from django.utils.html import format_html
+
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
     extra = 1
+    readonly_fields = ['image_preview']
+    
+    def image_preview(self, obj):
+        if obj.image:
+            return format_html('<img src="{}" style="max-width: 100px; max-height: 100px;" />', obj.image.url)
+        return "No Image"
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('name', 'category', 'price', 'stock')
@@ -24,3 +32,4 @@ class OrderAdmin(admin.ModelAdmin):
 admin.site.register(Category)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Order, OrderAdmin)
+admin.site.register(ProductImage)

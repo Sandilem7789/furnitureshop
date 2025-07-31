@@ -124,3 +124,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # login redirect URL
 LOGIN_REDIRECT_URL = 'product_list'
+
+#static url
+STATIC_URL = '/static/'
